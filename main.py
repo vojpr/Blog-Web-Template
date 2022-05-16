@@ -10,6 +10,8 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
 import smtplib
+import os
+from dotenv import load_dotenv
 
 
 # Only Admin can Edit and Delete posts
@@ -20,8 +22,10 @@ import smtplib
 # email: lewis@email.com
 # password: lewispass
 
-MY_EMAIL = "EMAIL_ADDRESS"
-EMAIL_PASSWORD = "EMAIL EMAIL_PASSWORD"
+load_dotenv()
+
+EMAIL = os.getenv('MY_EMAIL')
+EMAIL_PASSWORD = os.getenv('MY_EMAIL_PASSWORD')
 
 CURRENT_YEAR = date.today().year
 
@@ -239,13 +243,13 @@ def delete_post(post_id):
 def send_email(name, email, phone_num, message):
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
-        connection.login(MY_EMAIL, EMAIL_PASSWORD)
+        connection.login(EMAIL, EMAIL_PASSWORD)
         msg = f"Subject:New Message!\n\n" \
               f"Name: {name}\n" \
               f"Email: {email}\n" \
               f"Phone Number: {phone_num}\n" \
               f"Message: {message}"
-        connection.sendmail(from_addr=MY_EMAIL, to_addrs=MY_EMAIL, msg=msg.encode())
+        connection.sendmail(from_addr=EMAIL, to_addrs=EMAIL, msg=msg.encode())
 
 
 if __name__ == "__main__":
